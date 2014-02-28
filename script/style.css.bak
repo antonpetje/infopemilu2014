@@ -1,0 +1,8 @@
+.ui-body-a, .ui-page-theme-a .ui-body-inherit, html .ui-bar-a .ui-body-inherit, html .ui-body-a .ui-body-inherit, html body .ui-group-theme-a .ui-body-inherit, html .ui-panel-page-container-a{
+	background: rgba(255, 255, 255, 0.8);
+}
+#pagContent{
+	background-position:right top;
+	background-repeat:no-repeat;
+	background-size:75%;
+}
