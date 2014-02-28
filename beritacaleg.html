@@ -1,0 +1,48 @@
+<br/>
+<div class="ui-content">
+	
+	<script src="script/own.js"></script>
+	<script>
+		$(function(){
+		//var nama = QueryString.nama || "pemilu+indonesia+2014";
+		var items = '';
+		var total = 0;
+		url = 'https://news.google.com/news/feeds?q='+nama+'&output=rss';
+		$.ajax({
+			type: "GET",
+			url: document.location.protocol + '//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=1000&callback=?&q=' + encodeURIComponent(url),
+			dataType: 'json',
+			error: function(){
+				alert('Unable to load feed, Incorrect path or invalid feed');
+			},
+			success: function(xml){
+				values = xml.responseData.feed.entries;
+				$.each(values, function(key, val) {
+					title = val.title || "";
+					link = val.link || "#";
+					author = val.author || "";
+					publishedDate = val.publishedDate || "";
+					contentSnippet = val.contentSnippet || "";
+					content = val.content || "";
+					items += '<li><a href="'+link+'" target="_blank">';	
+					
+						items += '<h2>'+title+'</h2>';
+						items += '<p>'+contentSnippet+'</p>';
+					items += '</a></li>';
+					total++;
+					
+				});
+				if(total<=0){
+					$("#pageMessage").html("<i>Tidak ditemukan berita.</i>");
+				}else{
+					$('#newsList').html(items);
+					$('#newsList').listview().listview('refresh');
+				}
+			}
+		});
+	});
+		
+	</script>
+	<div id="pageMessage"></div>
+	<ul data-role="listview" id="newsList"></ul>
+</div>

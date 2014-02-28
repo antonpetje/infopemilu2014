@@ -1,0 +1,73 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Pusat Informasi Pemilu 2014</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<link rel="stylesheet" href="script/jquery.mobile.css" />
+	<link rel="stylesheet" href="script/style.css" />
+	<script src="script/jquery.min.js"></script>
+	<script src="script/jquery.mobile.js"></script>
+	<script src="script/own.js"></script>
+	<script>
+		$(function(){
+		var items = '';
+        url = 'https://news.google.com/news/feeds?q=pemilu+indonesia+2014&output=rss';
+        $.ajax({
+			type: "GET",
+			url: document.location.protocol + '//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=1000&callback=?&q=' + encodeURIComponent(url),
+			dataType: 'json',
+			error: function(){
+				alert('Unable to load feed, Incorrect path or invalid feed');
+			},
+			success: function(xml){
+				values = xml.responseData.feed.entries;
+				$.each(values, function(key, val) {
+					title = val.title || "";
+					link = val.link || "#";
+					author = val.author || "";
+					publishedDate = val.publishedDate || "";
+					contentSnippet = val.contentSnippet || "";
+					content = val.content || "";
+					items += '<li><a href="'+link+'" target="_blank">';	
+					
+						items += '<h2>'+title+'</h2>';
+						items += '<p>'+contentSnippet+'</p>';
+					items += '</a></li>';
+					
+				});
+				$('#newsList').html(items);
+				$('#newsList').listview().listview('refresh');
+			}
+		});
+    });
+		
+	</script>
+</head> 
+<body> 
+
+<div data-role="page" id="pagContent">
+
+	<div data-role="header" data-theme="b" data-position="fixed">
+		<h1 id="pageTitle">Seputar Pemilu 2014</h1>
+	</div>
+	<div data-role="content" id="mainContent">
+		<ul data-role="listview" id="newsList"></ul>
+		
+		
+	</div>
+	<div data-role="footer" data-theme="b" data-position="fixed">
+		<div data-role="navbar">
+			<ul>
+				<li><a href="./" data-ajax="false">Caleg</a></li>
+				<li><a href="prov_dapil.html" data-ajax="false">Dapil</a></li>
+				<li><a href="parpol.html" data-ajax="false">Parpol</a></li>
+				<li><a href="caritps.html" data-ajax="false">TPS</a></li>
+				<li><a href="news.html" class="ui-btn-active" data-ajax="false">Berita</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+
+</body>
+</html>

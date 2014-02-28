@@ -1,0 +1,64 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Informasi Pemilu 201</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<link rel="stylesheet" href="script/jquery.mobile.css" />
+	<script src="script/jquery.min.js"></script>
+	<script src="script/jquery.mobile.js"></script>
+	<script src="script/own.js"></script>
+	<script>
+	
+	$.getJSON('http://api.pemiluapi.org/candidate/api/partai?apiKey=c6e94111af5bc0befe9c91d36589331d', function(data) {
+		var dataResult = data.data.results;
+		var items = '';   		
+		
+		
+		var partais = dataResult.partai;
+		$.each(partais, function(key, val) {
+			if(val.nama){
+
+				items += '<li>';	
+					
+					items += '<img src="img/partai/'+val.id+'_bg.png" style="width:80px;">';
+					items += '<h2>'+val.nama+'</h2>';
+					items += '<p>'+val.nama_lengkap+'</p>';
+				items += '</li>';
+								
+			}
+		});
+		$('#listParpol').html(items);
+		$('#listParpol').listview().listview('refresh');		
+		
+	  
+	});
+
+	
+	</script>
+</head> 
+<body> 
+
+<div data-role="page">
+
+	<div data-role="header" data-theme="b" data-position="fixed">
+		<h1 id="pageTitle">Partai Politik</h1>
+	</div>
+
+	<div data-role="content">	
+		<ul data-role="listview" id="listParpol" data-filter="true"  data-filter-placeholder="Nama Partai Politik"></ul>
+	</div>
+	<div data-role="footer" data-theme="b" data-position="fixed">
+		<div data-role="navbar">
+			<ul>
+				<li><a href="./" data-ajax="false">Caleg</a></li>
+				<li><a href="prov_dapil.html" data-ajax="false">Dapil</a></li>
+				<li><a href="parpol.html" class="ui-btn-active" data-ajax="false">Parpol</a></li>
+				<li><a href="caritps.html" data-ajax="false">Cari TPS</a></li>
+				<li><a href="news.html" data-ajax="false">Berita</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

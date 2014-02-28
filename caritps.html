@@ -1,0 +1,81 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Pusat Informasi Pemilu 2014</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<link rel="stylesheet" href="script/jquery.mobile.css" />
+	<script src="script/jquery.min.js"></script>
+	<script src="script/jquery.mobile.js"></script>
+	<script src="script/own.js"></script>
+	<script>
+	
+	$(document).on('click', '#btnSearch', function(e){
+		$.mobile.loading('show');
+		var nik = $("#keyword").val() || "";
+		if(nik==""){
+			alert("Masukkan Nomer Induk Kependudukan Anda.");
+		}else{
+			$("#resultSearch").html('<iframe src="http://info-pemilu2014.com/dps.php?id='+nik+'" id="iframeTPS"></iframe>');
+			
+		}
+		$.mobile.loading('hide');
+	});
+	</script>
+	<style>
+		#iframeTPS{
+			height:400px;
+			overflow:hidden;
+			width:100%;
+			border:none;
+		}
+		.formbutton{
+			display:none;
+		}
+	</style>
+</head> 
+<body> 
+
+<div data-role="page">
+
+	<div data-role="header" data-theme="b" data-position="fixed">
+		<h1 id="pageTitle">Cari Lokasi TPS</h1>
+	</div>
+
+	<div data-role="content">	
+		<input type="search" name="search" id="keyword" placeholder="Masukkan NIK" />	
+		<div class="ui-grid-c center">
+			<div class="ui-block-a"></div>
+			<div class="ui-block-b"></div>
+			<div class="ui-block-c"></div>
+			<div class="ui-block-d"><button id="btnSearch" class="ui-btn ui-icon-search ui-btn-icon-left ui-mini">Cari</button></div>
+		</div>
+		<hr/>
+		<div id="resultSearch">
+			
+		</div>
+		<i>Sumber Data: <a href="http://data.kpu.go.id/" target="_blank">data.kpu.go.id</a></i>
+	</div>
+	<div data-role="footer" data-theme="b" data-position="fixed">
+		<div data-role="navbar">
+			<ul>
+				<li><a href="./" data-ajax="false">Caleg</a></li>
+				<li><a href="prov_dapil.html" data-ajax="false">Dapil</a></li>
+				<li><a href="parpol.html" data-ajax="false">Parpol</a></li>
+				<li><a href="caritps.html" class="ui-btn-active" data-ajax="false">TPS</a></li>
+				<li><a href="news.html" data-ajax="false">Berita</a></li>
+			</ul>
+		</div>
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<!-- pemilu_footer -->
+		<ins class="adsbygoogle"
+			 style="display:inline-block;width:320px;height:50px"
+			 data-ad-client="ca-pub-6661049029241315"
+			 data-ad-slot="4571901587"></ins>
+		<script>
+		(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+	</div>
+</div>
+
+</body>
+</html>

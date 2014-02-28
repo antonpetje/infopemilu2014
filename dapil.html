@@ -1,0 +1,62 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Pusat Informasi Pemilu 2014</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<link rel="stylesheet" href="script/jquery.mobile.css" />
+	<script src="script/jquery.min.js"></script>
+	<script src="script/jquery.mobile.js"></script>
+	<script src="script/own.js"></script>
+	<script>
+	
+	var prov_id = QueryString.id;
+	$.mobile.loading('show');
+	$.getJSON('http://api.pemiluapi.org/candidate/api/provinsi/'+prov_id+'?apiKey=c6e94111af5bc0befe9c91d36589331d', function(data) {
+		var dataResult = data.data.results.provinsi[0];
+		var items = '';   
+		if(dataResult.nama_lengkap){
+			$("#pageTitle").html("Daftar Dapil Provinsi "+dataResult.nama_lengkap);
+		}
+		var dapils = dataResult.dapil;
+		$.each(dapils, function(key, val) {
+			if(val.nama){
+				items += '<li><a href="daftarcaleg.html?prov_id='+prov_id+'&id='+val.id+'&nm='+encodeURI(val.nama)+'" data-ajax="false">'+val.nama+'</a></li>';
+			}
+		});
+		$('#listDapil').html(items);
+		$('#listDapil').listview().listview('refresh');
+		
+	});
+	$.mobile.loading('hide');
+
+	
+	</script>
+</head> 
+<body> 
+
+<div data-role="page">
+
+	<div data-role="header" data-theme="b" data-position="fixed">
+		 <a href="prov_dapil.html" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-arrow-l" data-ajax="false">Provinsi</a>
+		<h1 id="pageTitle">Informasi Pemilu 2014</h1>
+	</div>
+
+	<div data-role="content">	
+		<ul data-role="listview" id="listDapil" data-filter="true"  data-filter-placeholder="Nama Daerah Pemilihan (Dapil)"></ul>
+	</div>
+	<div data-role="footer" data-theme="b" data-position="fixed">
+		<div data-role="navbar">
+			<ul>
+				<li><a href="./" data-ajax="false">Caleg</a></li>
+				<li><a href="prov_dapil.html" class="ui-btn-active" data-ajax="false">Dapil</a></li>
+				<li><a href="parpol.html" data-ajax="false">Parpol</a></li>
+				<li><a href="caritps.html" data-ajax="false">TPS</a></li>
+				<li><a href="news.html" data-ajax="false">Berita</a></li>
+			</ul>
+		</div>
+	</div>
+
+</div>
+
+</body>
+</html>

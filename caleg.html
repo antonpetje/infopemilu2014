@@ -1,0 +1,225 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Pusat Informasi Pemilu 2014</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<link rel="stylesheet" href="script/jquery.mobile.css" />
+	<link rel="stylesheet" href="script/style.css" />
+	<script src="script/jquery.min.js"></script>
+	<script src="script/jquery.mobile.js"></script>
+	<script src="script/own.js"></script>
+	<script>
+	
+	var id = QueryString.id;
+	var dapil_name = decodeURI(QueryString.nm);
+	var nama = "";
+	$.mobile.loading('show');
+	$.getJSON('http://api.pemiluapi.org/candidate/api/caleg/'+id+'?apiKey=c6e94111af5bc0befe9c91d36589331d', function(data) {
+		var dataResult = data.data.results;
+		var items = '';   
+		
+		var caleg = dataResult.caleg[0];
+		var nama_partai = "";
+		var id_partai="";
+
+		if(caleg){
+			nama = caleg.nama;
+			if(caleg.partai){
+				nama_partai = caleg.partai.nama || "";
+				id_partai = caleg.partai.id || "";
+			}
+			var dapil = caleg.dapil;
+			var foto_url = caleg.foto_url;
+			if(nama){
+				$("#pageTitle").html(nama);
+				$("#reportLink").attr("href","mailto:pengaduan@bawaslu.go.id?subject=Lapor: "+nama+" (Dapil "+dapil.nama+")");
+			}
+			if(dapil.id){
+				$("#backButton").attr("href","daftarcaleg.html?id="+dapil.id+"&nm="+dapil.nama);
+			}else{
+				$("#backButton").attr("href","./");
+			}
+			
+			var content="";
+			if(foto_url){
+				content += '<div><img src="'+foto_url+'" style="width:100%"></div>';
+			}
+			if(nama){
+				content += '<strong>Nama:</strong><br/>';
+				content += '<span>'+nama+'</span><br/><br/>';
+			}
+			content += '<div class="ui-corner-all custom-corners">';
+				content += '<div class="ui-body ui-body-a">';					
+					if(nama_partai) content += '<div>'+nama_partai+'</div>';
+					if(caleg.lembaga) content += '<div>'+LP[caleg.lembaga]+'</div>';
+
+					if(caleg.provinsi) content += '<div><strong>Provinsi:</strong>  '+caleg.provinsi.nama+'</div>';
+					if(caleg.dapil) content += '<div><strong>Daerah Pemilihan:</strong>  '+caleg.dapil.nama+'</div>';
+					if(caleg.urutan) content += '<div><strong>No. Urut:</strong>  '+caleg.urutan+'</div>';				
+					
+				content += '</div>';
+			content += '</div>';
+
+			if(id_partai){
+				$("#pagContent").css("background-image","url('img/partai/"+id_partai+"_bg.png')");
+			}
+
+			$("#tabContentBerita").attr("href","beritacaleg.html?nama="+nama);
+			
+			//Data Pribadi
+			
+			content += '<div class="ui-corner-all custom-corners">';
+				content += '<div class="ui-bar ui-bar-a">';
+					content += '<h3>Data Pribadi</h3>';
+				content += '</div>';
+					content += '<div class="ui-body ui-body-a">';
+					content += '<table>';
+						if(caleg.jenis_kelamin) content += '<tr><td><strong>Jenis Kelamin</strong></td><td>: </td><td>'+JK[caleg.jenis_kelamin]+'</td></tr>';
+						if(caleg.agama) content += '<tr><td><strong>Agama</strong></td></td><td>: </td><td>'+caleg.agama+'</td></tr>';
+						if(caleg.tempat_lahir) content += '<tr><td><strong>TTL</strong></td></td><td>: </td><td>'+caleg.tempat_lahir+','+caleg.tanggal_lahir+'</td></tr>';
+						if(caleg.status_perkawinan) content += '<tr><td><strong>Status</strong></td></td><td>: </td><td>'+caleg.status_perkawinan+'</td></tr>';	
+					content += '</table>';
+					//jenis kelamin
+					//agama
+					//TTL
+					//Status perkawinan
+						//nama pasangan
+					//jumlah anak
+					//alamat: provinsi, kabupaten, kecamatan, kelurahan
+				content += '</div>';
+			content += '</div>';
+			if(caleg.riwayat_pendidikan.length !==0){
+				//Riwayat Pendidikan
+				content += '<div class="ui-corner-all custom-corners">';
+					content += '<div class="ui-bar ui-bar-a">';
+						content += '<h3>Riwayat Pendidikan</h3>';
+					content += '</div>';
+						content += '<div class="ui-body ui-body-a">';
+						content += '<ol>';
+						$.each(caleg.riwayat_pendidikan, function(key, val) {
+							content += '<li>'+val.ringkasan;							
+						});
+						content += '</ol>';						
+					content += '</div>';
+				content += '</div>';
+			}else{
+				//content += '<i>tidak ada catatan riwayat pendidikan</i>';
+			}
+			if(caleg.riwayat_pekerjaan.length !==0){
+				//Riwayat Pekerjaan
+				content += '<div class="ui-corner-all custom-corners">';
+					content += '<div class="ui-bar ui-bar-a">';
+						content += '<h3>Riwayat Pekerjaan</h3>';
+					content += '</div>';
+						content += '<div class="ui-body ui-body-a">';
+						content += '<ol>';
+						$.each(caleg.riwayat_pekerjaan, function(key, val) {
+							content += '<li>'+val.ringkasan;							
+						});
+						content += '</ol>';
+					content += '</div>';
+				content += '</div>';
+			}else{
+				//content += '<i>tidak ada catatan riwayat pekerjaan</i>';
+			}
+			if(caleg.riwayat_organisasi.length !==0){
+				//Riwayat Organisasi
+				content += '<div class="ui-corner-all custom-corners">';
+					content += '<div class="ui-bar ui-bar-a">';
+						content += '<h3>Riwayat Organisasi</h3>';
+					content += '</div>';
+						content += '<div class="ui-body ui-body-a">';
+						content += '<ol>';
+						$.each(caleg.riwayat_organisasi, function(key, val) {
+							content += '<li>'+val.ringkasan;							
+						});
+						content += '</ol>';
+					content += '</div>';
+				content += '</div>';
+			}else{
+				//content += '<i>tidak ada catatan riwayat organisasi</i>';
+			}
+
+
+
+			$("#profileCaleg").html(content);
+		}
+		
+		
+
+		$.mobile.loading('hide');
+	});
+
+	
+	</script>
+</head> 
+<body> 
+
+<div data-role="page" id="pagContent">
+
+	<div data-role="header" data-theme="b" data-position="fixed">
+		 <a href="#" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-arrow-l" id="backButton"  data-ajax="false">Back</a>
+		<h1 id="pageTitle">Informasi Pemilu 2014</h1>
+	</div>
+	<div data-role="content" id="mainContent">
+		<div data-role="tabs">
+			<div class="ui-grid-b center">
+				<div class="ui-block-a"></div>
+				<div class="ui-block-b">
+					 <div data-role="navbar">
+						<ul>
+						  <li><a href="#profileCaleg" data-theme="a" data-ajax="false" class="ui-btn-active">Profil</a></li>
+						  <li><a href="beritacaleg.html?nama=" data-theme="a" data-ajax="false" id="tabContentBerita">Berita</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="ui-block-c"></div>
+			</div>
+			<div id="profileCaleg" class="ui-content"></div>
+			<div id="news" class="ui-content"></div>
+		</div>
+		<div class="ui-grid-a">
+			<div class="ui-block-a"></div>
+			<div class="ui-block-b"><a href="#" class="ui-shadow ui-btn ui-corner-all ui-mini ui-icon-comment ui-btn-icon-left ui-btn-c" id="reportLink">Laporkan !</a></div>
+		</div>
+		<div class="ui-grid-b">
+			<div class="ui-block-a"><div class="fb-share-button" data-type="button"></div></div>
+			<div class="ui-block-b">
+				<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+			</div>
+		</div>
+	</div>
+	<div data-role="footer" data-theme="b" data-position="fixed">
+		<div data-role="navbar">
+			<ul>
+				<li><a href="./" data-ajax="false">Caleg</a></li>
+				<li><a href="prov_dapil.html" data-ajax="false">Dapil</a></li>
+				<li><a href="parpol.html" data-ajax="false">Parpol</a></li>
+				<li><a href="caritps.html" data-ajax="false">TPS</a></li>
+				<li><a href="news.html" data-ajax="false">Berita</a></li>
+			</ul>
+		</div>
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<!-- pemilu_footer -->
+		<ins class="adsbygoogle"
+			 style="display:inline-block;width:320px;height:50px"
+			 data-ad-client="ca-pub-6661049029241315"
+			 data-ad-slot="4571901587"></ins>
+		<script>
+		(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+	</div>
+</div>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=208609222672714";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+</body>
+</html>
